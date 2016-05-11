@@ -1,0 +1,7 @@
+particlesAmount (integer)
+spaceWidth spaceHeight	(double double)
+L W D (double double double)
+particleRadio particleMass (double double)
+particleRadio particleMass (double double)
+particleRadio particleMass (double double)
+...
