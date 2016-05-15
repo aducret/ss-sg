@@ -10,8 +10,6 @@ import util.RandomUtils;
 
 public class SimulationInputGenerator {
 	private static final double PARTICLE_MASS = 0.01;
-//	private static final double KN = Math.pow(10, 5);
-//	private static final double KT = 2 * KN;
 
 	public static void generateRandomInput(double L, double W, double D)
 			throws FileNotFoundException, UnsupportedEncodingException {

@@ -13,6 +13,7 @@ public class Particle {
 	public Vector2 oldPosition; 
 	private Vector2 velocity;
 	public Vector2 oldVelocity;
+	public Vector2 resultantForce;
 	private double mass;
 	private List<Particle> neighbors;
 

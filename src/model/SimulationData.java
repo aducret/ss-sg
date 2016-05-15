@@ -13,7 +13,6 @@ public class SimulationData {
 	private double D;
 	private Integer particlesAmount;
 	private List<Particle> particles;
-	private Particle specialParticle;
 	private HashMap<Integer, Particle> particlesMap;
 
 	private SimulationData() {
@@ -66,10 +65,6 @@ public class SimulationData {
 	
 	public List<Particle> getParticles() {
 		return particles;
-	}
-	
-	public Particle getSpecialParticle() {
-		return specialParticle;
 	}
 	
 	public Particle getParticleById(int id) {

@@ -43,10 +43,6 @@ public class OvitoFileInputGenerator {
 		printBoundaryParticle(particleAmount + 2, width, 0);
 		printBoundaryParticle(particleAmount + 2, 0, height);
 		printBoundaryParticle(particleAmount + 2, width, height);
-//		printBoundaryParticle(particleAmount + 2, -spaceDimension / 2.0, -spaceDimension / 2.0);
-//		printBoundaryParticle(particleAmount + 3, spaceDimension / 2.0, -spaceDimension / 2.0);
-//		printBoundaryParticle(particleAmount + 4, -spaceDimension / 2.0, spaceDimension / 2.0);
-//		printBoundaryParticle(particleAmount + 5, spaceDimension / 2.0, spaceDimension / 2.0);
 	}
 
 	private void printBoundaryParticle(int id, double x, double y) {
