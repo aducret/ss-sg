@@ -3,6 +3,8 @@ package model;
 import java.util.ArrayList;
 import java.util.List;
 
+import integration.VerletAlgorithm;
+
 public class Particle {
 //	public static final double DENSITY = 3.183098861837907e15;
 	public static final double DENSITY = 3.183098861837907e11;
@@ -16,6 +18,7 @@ public class Particle {
 	public Vector2 resultantForce;
 	private double mass;
 	private List<Particle> neighbors;
+	public double radius;
 
 	public Particle(int id, Vector2 position, double mass) {
 		if (id <= 0)
@@ -47,7 +50,8 @@ public class Particle {
 	 * La densidad se recibe por constructor o esta hardcodeada.
 	 */
 	public double getRadius() {
-		return Math.sqrt(mass / (DENSITY * 2 * Math.PI));
+//		return Math.sqrt(mass / (DENSITY * 2 * Math.PI));
+		return radius;
 	}
 
 	public double getMass() {
@@ -114,13 +118,13 @@ public class Particle {
 	
 	public String toString() {
 		return new StringBuilder()
-				.append("------ PARTICLE ------")
+				.append("------ PARTICLE ------\n")
 				.append("id: " + id + "\n")
 				.append("position: " + position + "\n")
 				.append("velocity: " + velocity + "\n")
 				.append("mass: " + mass + "\n")
 				.append("radius: " + getRadius() + "\n")
-				.append("----------------------")
+				.append("----------------------\n")
 				.toString();
 	}
 }

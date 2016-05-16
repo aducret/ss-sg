@@ -34,18 +34,23 @@ public class InformationParser {
 				.withSpaceDimension(width, height)
 				.withParameters(L, W, D);
 		
+		double radiusX = 0;
 		for (int i = 1; i <= particlesAmount; i++) {
 			double mass = staticScanner.nextDouble();
+			double radius = staticScanner.nextDouble();
+			radiusX = radius;
 			double x = dynamicScanner.nextDouble();
 			double y = dynamicScanner.nextDouble();
 			Particle particle = new Particle(i, new Vector2(x, y), mass);
+			particle.setVelocity(new Vector2(0, 0));
+			particle.radius = radius;
 			builder = builder.withParticle(particle);
 		}
 
 		dynamicScanner.close();
 		staticScanner.close();
 
-		return builder;
+		return builder.withInteractionRadius(radiusX);
 	}
 	
 }

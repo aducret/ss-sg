@@ -42,6 +42,14 @@ public class Vector2 {
 		return new Vector2(x * l, y * l);
 	}
 
+	public double angleWith(Vector2 vector) {
+		return Math.acos(dotProduct(vector) / (getMagnitude() * vector.getMagnitude()));
+	}
+
+	public double dotProduct(Vector2 vector) {
+		return x * vector.x + y * vector.y;
+	}
+
 	public Vector2 rotateCCW(double angle) {
 		return MatrixUtils.rotateCCW(this, angle);
 	}
@@ -53,11 +61,11 @@ public class Vector2 {
 	public double distanceTo(Vector2 vector) {
 		return Math.sqrt((x - vector.x) * (x - vector.x) + (y - vector.y) * (y - vector.y));
 	}
-	
+
 	public double getMagnitude() {
 		return Math.sqrt(x * x + y * y);
 	}
-	
+
 	public Vector2 normalize() {
 		return scale(1 / (norm()));
 	}

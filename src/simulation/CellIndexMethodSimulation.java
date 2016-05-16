@@ -15,29 +15,36 @@ public class CellIndexMethodSimulation implements Simulation {
 	private Cell[][] cells;
 	private int M;
 	private boolean hasPeriodicBoundaries;
-	
+
 	public CellIndexMethodSimulation(Integer M, Boolean hasPeriodicBoundaries) {
 		if (M == null || hasPeriodicBoundaries == null)
 			throw new IllegalArgumentException("fuck everything");
 		this.M = M;
 		this.hasPeriodicBoundaries = hasPeriodicBoundaries;
 	}
-	
+
 	@Override
 	public void simulate(SimulationData simulationData, SimulationListener simulationListener) {
 		this.simulationData = simulationData;
+		clearNeighbors();
 		initializeParticlesContainer();
 		distributeParticles();
 		calculateDistances();
 	}
 
-//	private void printCells() {
-//		for (int i = 0; i < M; i++) {
-//			for (int j = 0; j < M; j++) {
-//				System.out.println("cell: (" + i + ", " + j + "): " + cells[i][j]);
-//			}
-//		}
-//	}
+	private void clearNeighbors() {
+		for (Particle particle : simulationData.getParticles()) {
+			particle.getNeighbors().clear();
+		}
+	}
+
+	private void printCells() {
+		for (int i = 0; i < M; i++) {
+			for (int j = 0; j < M; j++) {
+				System.out.println("cell: (" + i + ", " + j + "):\n" + cells[i][j]);
+			}
+		}
+	}
 
 	private void calculateDistances() {
 		for (int i = 0; i < M; i++) {
@@ -51,32 +58,39 @@ public class CellIndexMethodSimulation implements Simulation {
 	}
 
 	private void calculateDistances(Cell cell, List<CellWrapper> cellWrappers) {
-		for (Particle particle: cell.getParticles()) {
-			for (CellWrapper cellWrapper: cellWrappers) {
+		for (Particle particle : cell.getParticles()) {
+			for (CellWrapper cellWrapper : cellWrappers) {
 				Cell neighborCell = cellWrapper.getCell();
-				for (Particle neighborParticle: neighborCell.getParticles()) {
-					if (particle.equals(neighborParticle)) continue;
-					if (!satisfiesDistance(particle, neighborParticle, cellWrapper)) continue;
-					if (particle.getNeighbors().contains(neighborParticle)) continue;
+				for (Particle neighborParticle : neighborCell.getParticles()) {
+					if (particle.equals(neighborParticle))
+						continue;
+					if (!satisfiesDistance(particle, neighborParticle, cellWrapper))
+						continue;
+					if (particle.getNeighbors().contains(neighborParticle))
+						continue;
 					particle.getNeighbors().add(neighborParticle);
 					neighborParticle.getNeighbors().add(particle);
 				}
 			}
 		}
 	}
-	
+
 	private boolean satisfiesDistance(Particle particleA, Particle particleB, CellWrapper particleBWrapper) {
 		return distanceBetween(particleA, particleB, particleBWrapper) < simulationData.getInteractionRadius();
 	}
-	
+
 	private double distanceBetween(Particle particleA, Particle particleB, CellWrapper particleBWrapper) {
-		double ax = particleA.getPosition().getX();
-		double ay = particleA.getPosition().getY();
-		double bx = particleB.getPosition().getX() + particleBWrapper.getxOffset();
-		double by = particleB.getPosition().getY() + particleBWrapper.getyOffset();
-		return distanceBetween(ax, ay, bx, by) - particleA.getRadius() - particleB.getRadius();
+		// double ax = particleA.getPosition().getX();
+		// double ay = particleA.getPosition().getY();
+		// double bx = particleB.getPosition().getX() +
+		// particleBWrapper.getxOffset();
+		// double by = particleB.getPosition().getY() +
+		// particleBWrapper.getyOffset();
+		// return distanceBetween(ax, ay, bx, by) - particleA.getRadius() -
+		// particleB.getRadius();
+		return particleA.getPosition().distanceTo(particleB.getPosition());
 	}
-	
+
 	private double distanceBetween(double x1, double y1, double x2, double y2) {
 		double a = x1 - x2;
 		double b = y1 - y2;
@@ -86,8 +100,7 @@ public class CellIndexMethodSimulation implements Simulation {
 	private List<CellWrapper> calculateCellWrappers(List<Point> directions) {
 		List<CellWrapper> cellWrappers = new ArrayList<CellWrapper>();
 		for (Point direction : directions) {
-			if (isOutOfBounds(direction.x, direction.y)
-					&& !hasPeriodicBoundaries)
+			if (isOutOfBounds(direction.x, direction.y) && !hasPeriodicBoundaries)
 				continue;
 			cellWrappers.add(generateCellWrapper(direction.x, direction.y));
 		}
@@ -105,8 +118,7 @@ public class CellIndexMethodSimulation implements Simulation {
 	}
 
 	private boolean isOutOfBounds(int i, int j) {
-		return !(i >= 0 && j >= 0 && i < M
-				&& j < M);
+		return !(i >= 0 && j >= 0 && i < M && j < M);
 	}
 
 	private CellWrapper generateCellWrapper(int i, int j) {
@@ -133,13 +145,11 @@ public class CellIndexMethodSimulation implements Simulation {
 			return simulationData.getHeight();
 		return 0;
 	}
-	
+
 	private void distributeParticles() {
 		for (Particle particle : simulationData.getParticles()) {
-			int row = (int) Math.floor(particle.getPosition().getY()
-					/ getRowsCellDimension());
-			int column = (int) Math.floor(particle.getPosition().getX()
-					/ getColumnsCellDimension());
+			int row = (int) Math.floor(particle.getPosition().getY() / getCellDimension());
+			int column = (int) Math.floor(particle.getPosition().getX() / getCellDimension());
 			cells[row][column].getParticles().add(particle);
 		}
 	}
@@ -152,13 +162,16 @@ public class CellIndexMethodSimulation implements Simulation {
 			}
 		}
 	}
-	
-	private Float getRowsCellDimension() {
-		return (float) (simulationData.getWidth() / ((float) M));
+
+	/*
+	 * returns the dimension of one of the MxM cells (they are squares)
+	 */
+	private Float getCellDimension() {
+		return (float) ((simulationData.getL() + 1) / ((float) M));
 	}
-	
-	private Float getColumnsCellDimension() {
-		return (float) (simulationData.getHeight() / ((float) M));
-	}
-	
+
+	// private Float getColumnsCellDimension() {
+	// return (float) ((simulationData.getL() + 1) / ((float) M));
+	// }
+
 }

@@ -26,23 +26,25 @@ public class OvitoFileInputGenerator {
 	}
 
 	public void printSimulationFrame(SimulationData simulationData) {
+		// TODO: still +1??
 		printHeaders(simulationData.getParticlesAmount() + 1);
-		writer.println(generateLine(simulationData.getSpecialParticle()));
 		for (Particle particle : simulationData.getParticles()) {
 			writer.println(generateLine(particle));
 		}
-		printBoundariesParticles(simulationData.getWidth(), simulationData.getHeight(), simulationData.getParticlesAmount());
+		printBoundariesParticles(simulationData.getWidth(), simulationData.getHeight(),
+				simulationData.getParticlesAmount(), simulationData.getParticleById(1).getRadius());
 	}
 
 	public void endSimulation() {
 		writer.close();
 	}
 
-	private void printBoundariesParticles(double width, double height, int particleAmount) {
-		printBoundaryParticle(particleAmount + 2, 0, 0);
-		printBoundaryParticle(particleAmount + 2, width, 0);
-		printBoundaryParticle(particleAmount + 2, 0, height);
-		printBoundaryParticle(particleAmount + 2, width, height);
+	private void printBoundariesParticles(double width, double height, int particleAmount, double radius) {
+		double K = 0;
+		printBoundaryParticle(particleAmount + 2, 0 - K, -K);
+		printBoundaryParticle(particleAmount + 3, width + K, -K);
+		printBoundaryParticle(particleAmount + 4, 0 - K, height + K);
+		printBoundaryParticle(particleAmount + 5, width + K, height + K);
 	}
 
 	private void printBoundaryParticle(int id, double x, double y) {
@@ -65,8 +67,10 @@ public class OvitoFileInputGenerator {
 	}
 
 	private String generateParticleColor(Particle particle) {
-		double red = (Math.sin(particle.getAngle()) / 2) + 0.5;
-		double green = (Math.cos(particle.getAngle()) / 2) + 0.5;
-		return red + " " + green + " 0.2";
+//		if (particle.getVelocity() == null || particle.getVelocity().getMagnitude() < 1e-9)
+//			return BLUE;
+		 double red = (Math.sin(particle.getAngle()) / 2) + 0.5;
+		 double green = (Math.cos(particle.getAngle()) / 2) + 0.5;
+		 return red + " " + green + " 0.2";
 	}
 }

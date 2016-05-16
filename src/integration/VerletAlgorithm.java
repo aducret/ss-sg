@@ -26,4 +26,12 @@ public class VerletAlgorithm {
 			return null;
 		return newPosition.substract(oldPosition).scale(1 / (2 * dt));
 	}
+
+	public static Vector2 getVelocity(double dt, Particle particle) {
+		if (particle.oldPosition == null)
+			return new Vector2(0, 0);
+		Vector2 ans = getVelocity(dt, particle.oldPosition, nextPosition(dt, particle));
+		particle.setVelocity(ans);
+		return ans;
+	}
 }

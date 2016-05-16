@@ -4,7 +4,7 @@ import model.Particle;
 import model.SimulationData;
 
 public class BruteForceSimulation implements Simulation {
-	
+
 	private SimulationData simulationData;
 
 	@Override
@@ -13,30 +13,34 @@ public class BruteForceSimulation implements Simulation {
 		clearNeighbors();
 		calculateDistances();
 	}
-	
+
 	private void clearNeighbors() {
-		for (Particle particle: simulationData.getParticles()) {
+		for (Particle particle : simulationData.getParticles()) {
 			particle.getNeighbors().clear();
 		}
 	}
-	
+
 	private void calculateDistances() {
-		for (Particle particleA: simulationData.getParticles()) {
-			for (Particle particleB: simulationData.getParticles()) {
-				if (particleA.equals(particleB)) continue;
-				if (!satisfiesDistance(particleA, particleB)) continue;
-				if (particleA.getNeighbors().contains(particleB)) continue;
-				//System.out.println(particleA.getId() + " with " + particleB.getId());
- 				particleA.getNeighbors().add(particleB);
+		for (Particle particleA : simulationData.getParticles()) {
+			for (Particle particleB : simulationData.getParticles()) {
+				if (particleA.equals(particleB))
+					continue;
+				if (!satisfiesDistance(particleA, particleB))
+					continue;
+				if (particleA.getNeighbors().contains(particleB))
+					continue;
+				// System.out.println(particleA.getId() + " with " +
+				// particleB.getId());
+				particleA.getNeighbors().add(particleB);
 				particleB.getNeighbors().add(particleA);
 			}
 		}
 	}
-	
+
 	private boolean satisfiesDistance(Particle particleA, Particle particleB) {
-		return distanceBetween(particleA, particleB) < simulationData.getInteractionRadius();
+		return particleA.getPosition().distanceTo(particleB.getPosition()) < simulationData.getInteractionRadius();
 	}
-	
+
 	private double distanceBetween(Particle particleA, Particle particleB) {
 		double ax = particleA.getPosition().getX();
 		double ay = particleA.getPosition().getY();
@@ -44,7 +48,7 @@ public class BruteForceSimulation implements Simulation {
 		double by = particleB.getPosition().getY();
 		return distanceBetween(ax, ay, bx, by) - particleA.getRadius() - particleB.getRadius();
 	}
-	
+
 	private double distanceBetween(double x1, double y1, double x2, double y2) {
 		double a = x1 - x2;
 		double b = y1 - y2;

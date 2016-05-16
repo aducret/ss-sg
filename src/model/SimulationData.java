@@ -19,7 +19,7 @@ public class SimulationData {
 	}
 	
 	public void fixIds() {
-		int id = 2;
+		int id = 1;
 		particlesMap.clear();
 		for (Particle particle: particles) {
 			particle.setId(id);

@@ -5,6 +5,15 @@ import model.Vector2;
 
 public class PhysicsUtils {
 	public static final double G = 6.6738431e-11;
+	public static final double GRAVITY = 9.807;
+
+	public static double earthGravityForceMagnitude(double mass) {
+		return mass * GRAVITY;
+	}
+
+	public static Vector2 earthGravityForce(double mass) {
+		return new Vector2(0, -earthGravityForceMagnitude(mass));
+	}
 
 	/*
 	 * gravitational force exerted by p2 on p1
