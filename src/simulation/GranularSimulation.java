@@ -25,10 +25,20 @@ public class GranularSimulation implements Simulation {
 	private SimulationListener simulationListener;
 	private SimulationData simulationData;
 
+	private FlowListener flowListener;
+	
+	public interface FlowListener {
+		void onBelowOutsiderDetected(double time);
+	}
+	
 	public GranularSimulation(double goalTime, double dt, double dtFrame) {
 		this.goalTime = goalTime;
 		this.dt = dt;
 		this.dtFrame = dtFrame;
+	}
+	
+	public void setFlowListener(FlowListener flowListener) {
+		this.flowListener = flowListener;
 	}
 
 	@Override
@@ -39,7 +49,7 @@ public class GranularSimulation implements Simulation {
 		currentTime = 0;
 
 		if (simulationListener != null)
-			simulationListener.onFrameAvailable(simulationData);
+			simulationListener.onFrameAvailable(0, simulationData);
 		lastFrameTime = System.currentTimeMillis();
 
 		timeToNextFrame = dtFrame;
@@ -50,7 +60,7 @@ public class GranularSimulation implements Simulation {
 				timeToNextFrame = dtFrame;
 				System.out.println("currentTime: " + currentTime);
 				if (simulationListener != null)
-					simulationListener.onFrameAvailable(simulationData);
+					simulationListener.onFrameAvailable(currentTime, simulationData);
 				long took = System.currentTimeMillis() - lastFrameTime;
 				lastFrameTime = System.currentTimeMillis();
 				System.out.println("estimated time left: " + timeLeft(took));
@@ -96,13 +106,17 @@ public class GranularSimulation implements Simulation {
 	private void killOutsiders() {
 		List<Integer> ids = new ArrayList<>();
 		for (Particle particle : simulationData.getParticles()) {
-			if (isOutsider(particle))
+			if (isOutsider(particle)) {
 				ids.add(particle.getId());
+				if (isBelowOutsider(particle) && flowListener != null) {
+					flowListener.onBelowOutsiderDetected(currentTime);
+				}
+			}
 		}
 		for (Integer id : ids) {
 			simulationData.removeParticleById(id);
 		}
-		simulationData.fixIds();
+		simulationData.fixIds();		
 	}
 
 	private boolean isOutsider(Particle particle) {
@@ -110,6 +124,11 @@ public class GranularSimulation implements Simulation {
 		double L = simulationData.getL();
 		double W = simulationData.getW();
 		return p.y < 0 || p.y > 1 + L || p.x < 0 || p.x > W;
+	}
+	
+	private boolean isBelowOutsider(Particle particle) {
+		Vector2 p = particle.getPosition();
+		return p.y < 0;
 	}
 
 	private void calculateForce(Particle particle) {

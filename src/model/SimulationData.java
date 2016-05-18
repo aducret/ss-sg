@@ -17,26 +17,35 @@ public class SimulationData {
 
 	private SimulationData() {
 	}
-	
+
 	public void fixIds() {
 		int id = 1;
 		particlesMap.clear();
-		for (Particle particle: particles) {
+		for (Particle particle : particles) {
 			particle.setId(id);
 			particlesMap.put(id, particle);
 			id++;
 		}
 	}
-	
+
 	public void removeParticleById(int id) {
 		Particle particle = particlesMap.remove(id);
-		if (particle == null) return;
+		if (particle == null)
+			return;
 		particles.remove(particle);
 		particlesAmount--;
 	}
 
 	public Double getInteractionRadius() {
 		return interactionRadius;
+	}
+
+	public double getKineticEnergy() {
+		double totalEnergy = 0;
+		for (Particle particle : getParticles()) {
+			totalEnergy += particle.getKineticEnergy();
+		}
+		return totalEnergy;
 	}
 
 	public double getWidth() {
@@ -62,19 +71,19 @@ public class SimulationData {
 	public Integer getParticlesAmount() {
 		return particlesAmount;
 	}
-	
+
 	public List<Particle> getParticles() {
 		return particles;
 	}
-	
+
 	public Particle getParticleById(int id) {
 		return particlesMap.get(id);
 	}
-	
+
 	public void setParticles(List<Particle> particles) {
 		this.particles = particles;
 	}
-	
+
 	public static class Builder {
 		private SimulationData simulationData;
 
@@ -103,7 +112,7 @@ public class SimulationData {
 			this.simulationData.height = height;
 			return this;
 		}
-		
+
 		public Builder withParameters(double L, double W, double D) {
 			this.simulationData.L = L;
 			this.simulationData.W = W;
@@ -116,7 +125,7 @@ public class SimulationData {
 			simulationData.particlesMap.put(particle.getId(), particle);
 			return this;
 		}
-		
+
 		public SimulationData build() {
 			return simulationData;
 		}

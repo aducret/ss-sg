@@ -13,6 +13,7 @@ import model.SimulationData;
 public class OvitoFileInputGenerator {
 	private static final String ENCODING = "UTF-8";
 	private static final String BLUE = "0 0 255";
+	private static final String GREEN = "0 255 0";
 
 	private PrintWriter writer;
 	private String filePath;
@@ -67,10 +68,18 @@ public class OvitoFileInputGenerator {
 	}
 
 	private String generateParticleColor(Particle particle) {
-//		if (particle.getVelocity() == null || particle.getVelocity().getMagnitude() < 1e-9)
-//			return BLUE;
-		 double red = (Math.sin(particle.getAngle()) / 2) + 0.5;
-		 double green = (Math.cos(particle.getAngle()) / 2) + 0.5;
-		 return red + " " + green + " 0.2";
+		// return GREEN;
+		// if (particle.getVelocity() == null ||
+		// particle.getVelocity().getMagnitude() < 1e-9)
+		// return BLUE;
+		// double red = (Math.sin(particle.getAngle()) / 2) + 0.5;
+		// double green = (Math.cos(particle.getAngle()) / 2) + 0.5;
+		// return red + " " + green + " 0.2";
+		double speed = particle.getSpeed();
+		double factor = 1 - Math.pow(Math.E, -0.2 * speed);
+		double red = factor;
+		double blue = 1 - factor;
+		String color = red + " 0 " + blue;
+		return color;
 	}
 }

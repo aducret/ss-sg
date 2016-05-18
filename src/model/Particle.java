@@ -29,12 +29,18 @@ public class Particle {
 		this.mass = mass;
 	}
 	
+//	TODO: implement
+	public double getKineticEnergy() {
+		double speed = getVelocity().norm();
+		return (getMass()*speed*speed)/2.0;
+	}
+	
 	public double getMomentum(Particle sun) {
 		return getSpeed() * getMass() * getPosition().distanceTo(sun.getPosition()); 
 	}
 	
 	public double getSpeed() {
-		return getVelocity().getMagnitude();
+		return getVelocity().norm();
 	}
 	
 	public int getId() {

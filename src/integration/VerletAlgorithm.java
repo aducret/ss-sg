@@ -11,6 +11,7 @@ public class VerletAlgorithm {
 		p.oldPosition = p.getPosition();
 		p.oldVelocity = oldVelocity;
 		p.setPosition(nextPosition);
+		p.setVelocity(getVelocity(dt, p));
 	}
 
 	/*
