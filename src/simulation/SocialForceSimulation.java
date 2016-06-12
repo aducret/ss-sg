@@ -82,7 +82,7 @@ public class SocialForceSimulation implements Simulation {
 			if (isOutsider(particle)) {
 				ids.add(particle.getId());
 				if (isBelowOutsider(particle) && flowListener != null) {
-					System.out.println("outsider detected. " + (simulationData.getParticles().size() - 1) + " left...");
+					System.out.println("outsider detected. " + (simulationData.getParticles().size() - 1) + " left... time: "+ currentTime);
 					flowListener.onBelowOutsiderDetected(currentTime);
 				}
 			}
