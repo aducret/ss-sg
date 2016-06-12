@@ -15,23 +15,27 @@ import util.PhysicsUtils;
 public class Main {
 	private static final String ENCODING = "UTF-8";
 
-	private static final double L = 6.0;
+	private static final double L = 4.0;
 	private static final double W = 3.0;
-	private static final double D = 2.0;
+	private static final double D = 0.0;
 
+//	private static String DYNAMIC_FILE_PATH = "doc/examples/Dynamic" + "Testing" + ".txt";
+//	private static String STATIC_FILE_PATH = "doc/examples/Static" + "Testing" + ".txt";
+	
 	private static String DYNAMIC_FILE_PATH = "doc/examples/Dynamic" + L + "-" + W + "-" + D + ".txt";
 	private static String STATIC_FILE_PATH = "doc/examples/Static" + L + "-" + W + "-" + D + ".txt";
 
 	private static final double TIME_DELTA = 0.00001;
 	private static final double TIME_FRAME = 0.01;
-	private static final double TIME_GOAL = 1.5;
+//	private static final double TIME_GOAL = 0.2858;
+	private static final double TIME_GOAL = 5.0;
 
 	public static void main(String[] args) throws FileNotFoundException, UnsupportedEncodingException {
 		SimulationData simulationData = parseSimulationData();
 		if (simulationData == null) {
 			throw new IllegalArgumentException("couldn't read simulationData!");
 		}
-
+		
 		final OvitoFileInputGenerator ovito = new OvitoFileInputGenerator("doc/examples/result.txt");
 		ovito.generateFile();
 

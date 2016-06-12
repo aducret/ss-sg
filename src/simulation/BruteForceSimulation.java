@@ -38,7 +38,7 @@ public class BruteForceSimulation implements Simulation {
 	}
 
 	private boolean satisfiesDistance(Particle particleA, Particle particleB) {
-		return particleA.getPosition().distanceTo(particleB.getPosition()) < simulationData.getInteractionRadius();
+		return particleA.getPosition().distanceTo(particleB.getPosition()) < 2 * simulationData.getInteractionRadius();
 	}
 
 	private double distanceBetween(Particle particleA, Particle particleB) {

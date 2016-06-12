@@ -76,7 +76,7 @@ public class CellIndexMethodSimulation implements Simulation {
 	}
 
 	private boolean satisfiesDistance(Particle particleA, Particle particleB, CellWrapper particleBWrapper) {
-		return distanceBetween(particleA, particleB, particleBWrapper) < simulationData.getInteractionRadius();
+		return distanceBetween(particleA, particleB, particleBWrapper) < 2 * simulationData.getInteractionRadius();
 	}
 
 	private double distanceBetween(Particle particleA, Particle particleB, CellWrapper particleBWrapper) {

@@ -32,8 +32,9 @@ public class OvitoFileInputGenerator {
 		for (Particle particle : simulationData.getParticles()) {
 			writer.println(generateLine(particle));
 		}
+//		System.out.println(simulationData.getParticles());
 		printBoundariesParticles(simulationData.getWidth(), simulationData.getHeight(),
-				simulationData.getParticlesAmount(), simulationData.getParticleById(1).getRadius());
+				simulationData.getParticlesAmount(), 0.1);
 	}
 
 	public void endSimulation() {

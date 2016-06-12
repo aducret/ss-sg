@@ -59,6 +59,10 @@ public class Particle {
 //		return Math.sqrt(mass / (DENSITY * 2 * Math.PI));
 		return radius;
 	}
+	
+	public void setRadius(double radius) {
+		this.radius = radius;
+	}
 
 	public double getMass() {
 		return mass;

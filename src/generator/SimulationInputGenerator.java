@@ -11,7 +11,7 @@ import util.RandomUtils;
 
 public class SimulationInputGenerator {
 	private static final double PARTICLE_MASS = 0.01;
-	private static final double DEFAULT_RADIUS = 0.8;
+	private static final double DEFAULT_RADIUS = 0.1;
 
 	public static void generateRandomInput(double L, double W, double D)
 			throws FileNotFoundException, UnsupportedEncodingException {
@@ -105,7 +105,7 @@ public class SimulationInputGenerator {
 	}
 
 	public static void main(String[] args) throws FileNotFoundException, UnsupportedEncodingException {
-		generateRandomInput(6.0, 3.0, 2.0);
+		generateRandomInput(4.0, 3.0);
 	}
 
 }

@@ -26,17 +26,17 @@ public class GranularSimulation implements Simulation {
 	private SimulationData simulationData;
 
 	private FlowListener flowListener;
-	
+
 	public interface FlowListener {
 		void onBelowOutsiderDetected(double time);
 	}
-	
+
 	public GranularSimulation(double goalTime, double dt, double dtFrame) {
 		this.goalTime = goalTime;
 		this.dt = dt;
 		this.dtFrame = dtFrame;
 	}
-	
+
 	public void setFlowListener(FlowListener flowListener) {
 		this.flowListener = flowListener;
 	}
@@ -70,11 +70,11 @@ public class GranularSimulation implements Simulation {
 	}
 
 	private String timeLeft(long took) {
-		long time = (took * framesLeft())/1000;
-		long hours = time/3600;
-		time -= hours*3600;
-		long minutes = time/60;
-		time -= minutes*60;
+		long time = (took * framesLeft()) / 1000;
+		long hours = time / 3600;
+		time -= hours * 3600;
+		long minutes = time / 60;
+		time -= minutes * 60;
 		long seconds = time;
 		return hours + "h " + minutes + "m " + seconds + "s";
 	}
@@ -88,9 +88,8 @@ public class GranularSimulation implements Simulation {
 		// TODO: improve with CellIndexMethod (can be used with non-square
 		// spaces?)
 		// interaction radius = particle radius * 2?
-		// new BruteForceSimulation().simulate(simulationData, null);
+//		 new BruteForceSimulation().simulate(simulationData, null);
 		new CellIndexMethodSimulation(Main.getOptimalValidM(simulationData), false).simulate(simulationData, null);
-		;
 
 		for (Particle particle : simulationData.getParticles()) {
 			calculateForce(particle);
@@ -116,7 +115,7 @@ public class GranularSimulation implements Simulation {
 		for (Integer id : ids) {
 			simulationData.removeParticleById(id);
 		}
-		simulationData.fixIds();		
+		simulationData.fixIds();
 	}
 
 	private boolean isOutsider(Particle particle) {
@@ -125,7 +124,7 @@ public class GranularSimulation implements Simulation {
 		double W = simulationData.getW();
 		return p.y < 0 || p.y > 1 + L || p.x < 0 || p.x > W;
 	}
-	
+
 	private boolean isBelowOutsider(Particle particle) {
 		Vector2 p = particle.getPosition();
 		return p.y < 0;
@@ -157,20 +156,25 @@ public class GranularSimulation implements Simulation {
 	 * force exerted by p2 to p1
 	 */
 	private Vector2 forceBy(Particle p1, Particle p2) {
-		double e = p1.getRadius() - p2.getPosition().distanceTo(p1.getPosition());
+		if (p1.getPosition().distanceTo(p2.getPosition()) > 2 * simulationData.getInteractionRadius()) {
+			System.out.println("what the fuck!");
+			return new Vector2(0, 0);
+		}
+		double e = (p1.getRadius() + p2.getRadius()) - p2.getPosition().distanceTo(p1.getPosition());
 		Vector2 versorN = p2.getPosition().substract(p1.getPosition()).normalize();
 		Vector2 versorT = versorN.rotateCCW(Math.PI / 2.0);
 
 		// angle between velocities
-		Vector2 velocity = VerletAlgorithm.getVelocity(dt, p1);
-		double alpha = velocity.angleWith(versorT);
-		double vt = velocity.getMagnitude() * Math.cos(alpha);
+		Vector2 v1 = VerletAlgorithm.getVelocity(dt, p1);
+		Vector2 v2 = VerletAlgorithm.getVelocity(dt, p2);
+		double alpha = v1.angleWith(versorN);
+		double vt = v1.getMagnitude() * Math.sin(alpha);
+		double relativeV = v1.substract(v2).dotProduct(versorT.scale(vt));
 
 		double fN = KN * e;
-		double fT = KT * e * vt;
+		double fT = KT * e * relativeV;
 
 		Vector2 force = versorN.scale(-fN).sum(versorT.scale(-fT));
-
 		return force;
 	}
 
@@ -187,6 +191,7 @@ public class GranularSimulation implements Simulation {
 		// if we reach this line, there is interaction between this particle and
 		Vector2 wallPosition = new Vector2(particle.getPosition().x, 1);
 		Particle wall = new Particle(1, wallPosition, particle.getMass());
+		wall.setRadius(0);
 		return forceBy(particle, wall);
 	}
 
@@ -202,6 +207,7 @@ public class GranularSimulation implements Simulation {
 		// if we reach this line, there is interaction between this particle and
 		Vector2 wallPosition = new Vector2(0, particle.getPosition().y);
 		Particle wall = new Particle(1, wallPosition, particle.getMass());
+		wall.setRadius(0);
 		return forceBy(particle, wall);
 	}
 
@@ -218,6 +224,7 @@ public class GranularSimulation implements Simulation {
 		// if we reach this line, there is interaction between this particle and
 		Vector2 wallPosition = new Vector2(particle.getPosition().x, 1);
 		Particle wall = new Particle(1, wallPosition, particle.getMass());
+		wall.setRadius(0);
 		return forceBy(particle, wall);
 	}
 
@@ -234,6 +241,7 @@ public class GranularSimulation implements Simulation {
 		// if we reach this line, there is interaction between this particle and
 		Vector2 wallPosition = new Vector2(W, particle.getPosition().y);
 		Particle wall = new Particle(1, wallPosition, particle.getMass());
+		wall.setRadius(0);
 		return forceBy(particle, wall);
 	}
 }
