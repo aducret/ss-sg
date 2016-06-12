@@ -14,6 +14,13 @@ public class SimulationData {
 	private Integer particlesAmount;
 	private List<Particle> particles;
 	private HashMap<Integer, Particle> particlesMap;
+	private double tao;
+	private double vd;
+	private double kn;
+	private double kt;
+	private double A;
+	private double B;
+	private Double maxRadius;
 
 	private SimulationData() {
 	}
@@ -35,9 +42,27 @@ public class SimulationData {
 		particles.remove(particle);
 		particlesAmount--;
 	}
+	
+	public double getMaxRadius() {
+		if (maxRadius == null) {
+			double max = 0;
+			for (Particle particle: getParticles()) {
+				if (particle.getRadius() > max) {
+					max = particle.getRadius();
+				}
+			}
+			maxRadius = max;
+		}
+		
+		return maxRadius;
+	}
 
 	public Double getInteractionRadius() {
 		return interactionRadius;
+	}
+	
+	public void setInteractionRadius(double interactionRadius) {
+		this.interactionRadius = interactionRadius;
 	}
 
 	public double getKineticEnergy() {
@@ -84,6 +109,56 @@ public class SimulationData {
 		this.particles = particles;
 	}
 
+	public double getTao() {
+		return tao;
+	}
+
+	public void setTao(double tao) {
+		this.tao = tao;
+	}
+
+	public double getVd() {
+		return vd;
+	}
+
+	public void setVd(double vd) {
+		this.vd = vd;
+	}
+
+	public double getKn() {
+		return kn;
+	}
+
+	public void setKn(double kn) {
+		this.kn = kn;
+	}
+
+	public double getKt() {
+		return kt;
+	}
+
+	public void setKt(double kt) {
+		this.kt = kt;
+	}
+
+	public double getA() {
+		return A;
+	}
+
+	public void setA(double a) {
+		A = a;
+	}
+
+	public double getB() {
+		return B;
+	}
+
+	public void setB(double b) {
+		B = b;
+	}
+
+
+
 	public static class Builder {
 		private SimulationData simulationData;
 
@@ -95,6 +170,32 @@ public class SimulationData {
 
 		public static Builder create() {
 			return new Builder();
+		}
+		
+		public Builder withVd(double vd) {
+			simulationData.vd = vd;
+			return this;
+		}
+		public Builder withKn(double kn) {
+			simulationData.kn = kn;
+			return this;
+		}
+		public Builder withKt(double kt) {
+			simulationData.kt = kt;
+			return this;
+		}
+		public Builder withA(double A) {
+			simulationData.A = A;
+			return this;
+		}
+		public Builder withB(double B) {
+			simulationData.B = B;
+			return this;
+		}
+		
+		public Builder withTao(double tao) {
+			simulationData.tao = tao;
+			return this;
 		}
 
 		public Builder withInteractionRadius(double interactionRadius) {

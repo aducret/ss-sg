@@ -6,62 +6,47 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javafx.util.Pair;
 import model.Vector2;
 import util.RandomUtils;
 
 public class SimulationInputGenerator {
-	private static final double PARTICLE_MASS = 0.01;
-	private static final double DEFAULT_RADIUS = 0.1;
+	private static final double PARTICLE_MASS = 80;
+	private static final double MAX_RADIUS = 0.29;
+	private static final double MIN_RADIUS = 0.25;
+	private static final double VD = 1.5;
+	private static final double TAO = 0.5;
+	private static final double A = 2000;
+	private static final double B = 0.08;
+	private static final double KN = 1.2e5;
+	private static final double KT = 2 * KN;
 
-	public static void generateRandomInput(double L, double W, double D)
+	public static void generateRandomInput(int N, double L, double W, double D)
 			throws FileNotFoundException, UnsupportedEncodingException {
-		if (D >= W || W >= L) {
-			throw new IllegalArgumentException("No se respetaron las cotas (L > W > D)");
-		}
 
-		PrintWriter dynamicWriter = new PrintWriter("doc/examples/Dynamic" + L + "-" + W + "-" + D + ".txt", "UTF-8");
-		PrintWriter staticWriter = new PrintWriter("doc/examples/Static" + L + "-" + W + "-" + D + ".txt", "UTF-8");
+		PrintWriter dynamicWriter = new PrintWriter("doc/examples/Dynamic" + N + "-" + L + "-" + W + "-" + D + ".txt",
+				"UTF-8");
+		PrintWriter staticWriter = new PrintWriter("doc/examples/Static" + N + "-" + L + "-" + W + "-" + D + ".txt",
+				"UTF-8");
 
-		List<Vector2> positions = getPositions(L, W, (D / 10.0) / 2.0);
+		List<Pair<Vector2, Double>> positions = getPositions(N, L, W);
 
 		staticWriter.println(positions.size());
 		staticWriter.println(W + " " + (L + 1));
 		staticWriter.println(L + " " + W + " " + D);
+		staticWriter.println(KN + " " + KT + " " + A + " " + B + " " + VD + " " + TAO);
 
-		for (Vector2 position : positions) {
-			printParticleLine(staticWriter, dynamicWriter, position, PARTICLE_MASS, (D / 10.0) / 2.0);
+		for (Pair<Vector2, Double> position : positions) {
+			printParticleLine(staticWriter, dynamicWriter, position.getKey(), PARTICLE_MASS, position.getValue());
 		}
 
 		staticWriter.close();
 		dynamicWriter.close();
 	}
 
-	public static void generateRandomInput(double L, double W)
-			throws FileNotFoundException, UnsupportedEncodingException {
-		if (W >= L) {
-			throw new IllegalArgumentException("No se respetaron las cotas (L > W > D)");
-		}
-
-		PrintWriter dynamicWriter = new PrintWriter("doc/examples/Dynamic" + L + "-" + W + "-" + 0.0 + ".txt", "UTF-8");
-		PrintWriter staticWriter = new PrintWriter("doc/examples/Static" + L + "-" + W + "-" + 0.0 + ".txt", "UTF-8");
-
-		List<Vector2> positions = getPositions(L, W, DEFAULT_RADIUS);
-
-		staticWriter.println(positions.size());
-		staticWriter.println(W + " " + (L + 1));
-		staticWriter.println(L + " " + W + " " + 0);
-
-		for (Vector2 position : positions) {
-			printParticleLine(staticWriter, dynamicWriter, position, PARTICLE_MASS, DEFAULT_RADIUS);
-		}
-
-		staticWriter.close();
-		dynamicWriter.close();
-	}
-
-	private static List<Vector2> getPositions(double L, double W, double radius) {
+	private static List<Pair<Vector2, Double>> getPositions(int N, double L, double W) {
 		long tolerance = 4000;
-		List<Vector2> positions = new ArrayList<>();
+		List<Pair<Vector2, Double>> positions = new ArrayList<>();
 		long time = 0;
 		long start = 0;
 		long end = 0;
@@ -72,19 +57,27 @@ public class SimulationInputGenerator {
 			while (!flag) {
 				if ((System.currentTimeMillis() - start) > tolerance)
 					break;
+				double radius = RandomUtils.randomBetween(MIN_RADIUS, MAX_RADIUS);
 				double x = RandomUtils.randomBetween(0 + radius, W - radius);
 				double y = RandomUtils.randomBetween(1 + radius, 1 + L - radius);
 				Vector2 position = new Vector2(x, y);
 				boolean found = false;
-				for (Vector2 other : positions) {
-					if (other.distanceTo(position) < radius * 2) {
+				for (Pair<Vector2, Double> other : positions) {
+					if (other.getKey().distanceTo(position) - radius - other.getValue() < 0) {
 						found = true;
 						break;
 					}
 				}
 				if (!found) {
-					positions.add(position);
+					positions.add(new Pair<Vector2, Double>(position, radius));
 					flag = true;
+
+					if (positions.size() >= N) {
+						end = System.currentTimeMillis();
+						time = end - start;
+						System.out.println("found all N in: " + time + ", now: " + positions.size());
+						return positions;
+					}
 				}
 			}
 
@@ -105,7 +98,7 @@ public class SimulationInputGenerator {
 	}
 
 	public static void main(String[] args) throws FileNotFoundException, UnsupportedEncodingException {
-		generateRandomInput(4.0, 3.0);
+		generateRandomInput(100, 20.0, 20.0, 1.2);
 	}
 
 }

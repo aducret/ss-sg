@@ -11,7 +11,7 @@ import model.SimulationData;
 import model.Vector2;
 
 public class InformationParser {
-	
+
 	public static SimulationData.Builder generateCellIndexObject(String dynamicFilePath, String staticFilePath)
 			throws FileNotFoundException {
 		SimulationData.Builder builder = SimulationData.Builder.create();
@@ -30,15 +30,18 @@ public class InformationParser {
 		double L = staticScanner.nextDouble();
 		double W = staticScanner.nextDouble();
 		double D = staticScanner.nextDouble();
-		builder = builder.withParticlesAmount(particlesAmount - 1)
-				.withSpaceDimension(width, height)
-				.withParameters(L, W, D);
-		
-		double radiusX = 0;
+		double kn = staticScanner.nextDouble();
+		double kt = staticScanner.nextDouble();
+		double A = staticScanner.nextDouble();
+		double B = staticScanner.nextDouble();
+		double vd = staticScanner.nextDouble();
+		double tao = staticScanner.nextDouble();
+		builder = builder.withParticlesAmount(particlesAmount - 1).withSpaceDimension(width, height)
+				.withParameters(L, W, D).withKn(kn).withKt(kt).withA(A).withB(B).withVd(vd).withTao(tao);
+
 		for (int i = 1; i <= particlesAmount; i++) {
 			double mass = staticScanner.nextDouble();
 			double radius = staticScanner.nextDouble();
-			radiusX = radius;
 			double x = dynamicScanner.nextDouble();
 			double y = dynamicScanner.nextDouble();
 			Particle particle = new Particle(i, new Vector2(x, y), mass);
@@ -50,7 +53,7 @@ public class InformationParser {
 		dynamicScanner.close();
 		staticScanner.close();
 
-		return builder.withInteractionRadius(radiusX);
+		return builder.withInteractionRadius(0);
 	}
-	
+
 }
