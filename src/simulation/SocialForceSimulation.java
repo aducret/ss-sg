@@ -11,10 +11,7 @@ import model.Vector2;
 import util.PhysicsUtils;
 
 public class SocialForceSimulation implements Simulation {
-	private static final double KN = Math.pow(10, 5);
-	private static final double KT = 2 * KN;
 
-	private double goalTime;
 	private double currentTime;
 	private double dt;
 	private double dtFrame;
@@ -31,8 +28,7 @@ public class SocialForceSimulation implements Simulation {
 		void onBelowOutsiderDetected(double time);
 	}
 
-	public SocialForceSimulation(double goalTime, double dt, double dtFrame) {
-		this.goalTime = goalTime;
+	public SocialForceSimulation(double dt, double dtFrame) {
 		this.dt = dt;
 		this.dtFrame = dtFrame;
 	}
@@ -58,29 +54,11 @@ public class SocialForceSimulation implements Simulation {
 			killOutsiders();
 			if (timeToNextFrame < 0) {
 				timeToNextFrame = dtFrame;
-//				System.out.println("currentTime: " + currentTime);
 				if (simulationListener != null)
 					simulationListener.onFrameAvailable(currentTime, simulationData);
-				long took = System.currentTimeMillis() - lastFrameTime;
-				lastFrameTime = System.currentTimeMillis();
-//				System.out.println("estimated time left: " + timeLeft(took));
 			}
 		}
 
-	}
-
-	private String timeLeft(long took) {
-		long time = (took * framesLeft()) / 1000;
-		long hours = time / 3600;
-		time -= hours * 3600;
-		long minutes = time / 60;
-		time -= minutes * 60;
-		long seconds = time;
-		return hours + "h " + minutes + "m " + seconds + "s";
-	}
-
-	private int framesLeft() {
-		return (int) Math.floor((goalTime - currentTime) / dtFrame);
 	}
 
 	private void moveSystemForward() {
@@ -164,7 +142,7 @@ public class SocialForceSimulation implements Simulation {
 	 */
 	private Vector2 forceBy(Particle p1, Particle p2) {
 		if (p1.getPosition().distanceTo(p2.getPosition()) - p1.getRadius() - p2.getRadius() > 0) {
-			System.out.println("what the fuck!");
+//			System.out.println("what the fuck!");
 			return new Vector2(0, 0);
 		}
 		double e = (p1.getRadius() + p2.getRadius()) - p2.getPosition().distanceTo(p1.getPosition());
@@ -178,8 +156,8 @@ public class SocialForceSimulation implements Simulation {
 		double vt = v1.getMagnitude() * Math.sin(alpha);
 		double relativeV = v1.substract(v2).dotProduct(versorT.scale(vt));
 
-		double fN = KN * e;
-		double fT = KT * e * relativeV;
+		double fN = simulationData.getKn() * e;
+		double fT = simulationData.getKt() * e * relativeV;
 
 		Vector2 force = versorN.scale(-fN).sum(versorT.scale(-fT));
 		return force;
@@ -215,10 +193,10 @@ public class SocialForceSimulation implements Simulation {
 		if (position.getY() < 1) {
 			eTarget = new Vector2(0, -1);
 		} else if (position.getX() > xDoorRight) {
-			Vector2 targetPosition = new Vector2(xDoorRight, 1);
+			Vector2 targetPosition = new Vector2(xDoorLeft, 1);
 			eTarget = targetPosition.substract(position).normalize();
 		} else if (position.getX() < xDoorLeft) {
-			Vector2 targetPosition = new Vector2(xDoorLeft, 1);
+			Vector2 targetPosition = new Vector2(xDoorRight, 1);
 			eTarget = targetPosition.substract(position).normalize();
 		} else {
 			Vector2 targetPosition = new Vector2(W / 2.0, -1);
@@ -240,6 +218,10 @@ public class SocialForceSimulation implements Simulation {
 
 		// if we reach this line, there is interaction between this particle and
 		Vector2 wallPosition = new Vector2(particle.getPosition().x, 1);
+		if (wallPosition.x > (W - D)/2.0) {
+			wallPosition.x = (W - D)/2.0;
+		}
+
 		Particle wall = new Particle(1, wallPosition, particle.getMass());
 		wall.setRadius(0);
 		return forceBy(particle, wall);
@@ -273,6 +255,9 @@ public class SocialForceSimulation implements Simulation {
 
 		// if we reach this line, there is interaction between this particle and
 		Vector2 wallPosition = new Vector2(particle.getPosition().x, 1);
+		if (wallPosition.x < (W + D)/2.0) {
+			wallPosition.x = (W + D)/2.0;
+		}
 		Particle wall = new Particle(1, wallPosition, particle.getMass());
 		wall.setRadius(0);
 		return forceBy(particle, wall);

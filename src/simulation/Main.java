@@ -25,10 +25,8 @@ public class Main {
 	private static String DYNAMIC_FILE_PATH = "doc/examples/Dynamic" + N + "-" + L + "-" + W + "-" + D + ".txt";
 	private static String STATIC_FILE_PATH = "doc/examples/Static" + N + "-" + L + "-" + W + "-" + D + ".txt";
 
-	private static final double TIME_DELTA = 0.001;
+	private static final double TIME_DELTA = 0.005;
 	private static final double TIME_FRAME = 0.01;
-	// private static final double TIME_GOAL = 0.2858;
-	private static final double TIME_GOAL = 6.0;
 
 	public static void main(String[] args) throws FileNotFoundException, UnsupportedEncodingException {
 		SimulationData simulationData = parseSimulationData();
@@ -42,7 +40,7 @@ public class Main {
 		PrintWriter flowWriter = new PrintWriter("doc/examples/flow.txt", ENCODING);
 		PrintWriter kineticWriter = new PrintWriter("doc/examples/kinetic.txt", ENCODING);
 
-		SocialForceSimulation granularSimulation = new SocialForceSimulation(TIME_GOAL, TIME_DELTA, TIME_FRAME);
+		SocialForceSimulation granularSimulation = new SocialForceSimulation(TIME_DELTA, TIME_FRAME);
 		granularSimulation.setFlowListener(new FlowListener() {
 
 			@Override
