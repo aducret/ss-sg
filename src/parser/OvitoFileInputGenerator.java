@@ -77,7 +77,7 @@ public class OvitoFileInputGenerator {
 		// double green = (Math.cos(particle.getAngle()) / 2) + 0.5;
 		// return red + " " + green + " 0.2";
 		double speed = particle.getSpeed();
-		double factor = 1 - Math.pow(Math.E, -0.2 * speed);
+		double factor = 1 - Math.pow(Math.E, -0.8 * speed);
 		double red = factor;
 		double blue = 1 - factor;
 		String color = red + " 0 " + blue;

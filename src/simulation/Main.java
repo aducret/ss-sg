@@ -12,7 +12,7 @@ import simulation.SocialForceSimulation.FlowListener;
 public class Main {
 	private static final String ENCODING = "UTF-8";
 
-	private static final int N = 100;
+	private static final int N = 30;
 	private static final double L = 20.0;
 	private static final double W = 20.0;
 	private static final double D = 1.2;
