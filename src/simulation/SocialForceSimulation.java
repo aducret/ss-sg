@@ -215,10 +215,10 @@ public class SocialForceSimulation implements Simulation {
 		if (position.getY() < 1) {
 			eTarget = new Vector2(0, -1);
 		} else if (position.getX() > xDoorRight) {
-			Vector2 targetPosition = new Vector2(xDoorLeft, 1);
+			Vector2 targetPosition = new Vector2(xDoorRight, 1);
 			eTarget = targetPosition.substract(position).normalize();
 		} else if (position.getX() < xDoorLeft) {
-			Vector2 targetPosition = new Vector2(xDoorRight, 1);
+			Vector2 targetPosition = new Vector2(xDoorLeft, 1);
 			eTarget = targetPosition.substract(position).normalize();
 		} else {
 			Vector2 targetPosition = new Vector2(W / 2.0, -1);
