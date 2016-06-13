@@ -6,6 +6,7 @@ import java.io.UnsupportedEncodingException;
 
 import model.Particle;
 import model.SimulationData;
+import model.Vector2;
 
 /**
  * Generates an input file for Ovito (Visualization Tool)
@@ -13,13 +14,17 @@ import model.SimulationData;
 public class OvitoFileInputGenerator {
 	private static final String ENCODING = "UTF-8";
 	private static final String BLUE = "0 0 255";
-	private static final String GREEN = "0 255 0";
-
+	private static final String WHITE = "255 255 255";
+	
+	private double D;
+	private double W;
 	private PrintWriter writer;
 	private String filePath;
 
-	public OvitoFileInputGenerator(String filePath) {
+	public OvitoFileInputGenerator(String filePath, double W, double D) {
 		this.filePath = filePath;
+		this.W = W;
+		this.D = D;
 	}
 
 	public void generateFile() throws FileNotFoundException, UnsupportedEncodingException {
@@ -28,13 +33,15 @@ public class OvitoFileInputGenerator {
 
 	public void printSimulationFrame(SimulationData simulationData) {
 		// TODO: still +1??
-		printHeaders(simulationData.getParticlesAmount() + 1);
+		int wallsParticlesCount = wallsParticlesCount();
+		printHeaders(simulationData.getParticlesAmount() + 1, wallsParticlesCount);
 		for (Particle particle : simulationData.getParticles()) {
 			writer.println(generateLine(particle));
 		}
 //		System.out.println(simulationData.getParticles());
 		printBoundariesParticles(simulationData.getWidth(), simulationData.getHeight(),
 				simulationData.getParticlesAmount(), 0.1);
+		printWalls();
 	}
 
 	public void endSimulation() {
@@ -53,8 +60,8 @@ public class OvitoFileInputGenerator {
 		writer.println(id + " " + x + " " + y + " 0 0 " + BLUE + " 0 " + BLUE);
 	}
 
-	private void printHeaders(int particlesAmount) {
-		writer.println(particlesAmount + 4);
+	private void printHeaders(int particlesAmount, int wallsParticlesCount) {
+		writer.println(particlesAmount + 4 + wallsParticlesCount);
 		writer.println("ID X Y dx dy pR pG pB r vR vG vB");
 	}
 
@@ -83,4 +90,27 @@ public class OvitoFileInputGenerator {
 		String color = red + " 0 " + blue;
 		return color;
 	}
+	
+	private int wallsParticlesCount() {
+		int count = 0;
+		for(double x = 0; x< (W - D) / 2; x += 0.01) {
+			count++;
+		}
+		
+		for(double x = (W + D) / 2; x < W; x += 0.01) {
+			count++;
+		}
+		return count;
+	}
+	
+	private void printWalls() {
+		for(double x = 0; x < (W - D) / 2; x += 0.01) {
+			writer.println(1 + " " + x + " " + 0.95 + " 0 0 " + WHITE + " 0.01 " + WHITE);
+		}
+		
+		for(double x = (W + D) / 2; x < W; x += 0.01) {
+			writer.println(1 + " " + x + " " + 0.95 + " 0 0 " + WHITE + " 0.01 " + WHITE);
+		}
+	}
+	
 }

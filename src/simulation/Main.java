@@ -34,7 +34,7 @@ public class Main {
 			throw new IllegalArgumentException("couldn't read simulationData!");
 		}
 
-		final OvitoFileInputGenerator ovito = new OvitoFileInputGenerator("doc/examples/result.txt");
+		final OvitoFileInputGenerator ovito = new OvitoFileInputGenerator("doc/examples/result.txt", W, D);
 		ovito.generateFile();
 
 		PrintWriter flowWriter = new PrintWriter("doc/examples/flow.txt", ENCODING);

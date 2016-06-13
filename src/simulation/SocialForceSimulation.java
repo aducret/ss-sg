@@ -62,7 +62,6 @@ public class SocialForceSimulation implements Simulation {
 	}
 
 	private void moveSystemForward() {
-
 		// new BruteForceSimulation().simulate(simulationData, null);
 
 		for (Particle particle : simulationData.getParticles()) {
@@ -217,6 +216,7 @@ public class SocialForceSimulation implements Simulation {
 			return new Vector2(0, 0);
 
 		// if we reach this line, there is interaction between this particle and
+
 		Vector2 wallPosition = new Vector2(particle.getPosition().x, 1);
 		if (wallPosition.x > (W - D)/2.0) {
 			wallPosition.x = (W - D)/2.0;
@@ -258,6 +258,7 @@ public class SocialForceSimulation implements Simulation {
 		if (wallPosition.x < (W + D)/2.0) {
 			wallPosition.x = (W + D)/2.0;
 		}
+
 		Particle wall = new Particle(1, wallPosition, particle.getMass());
 		wall.setRadius(0);
 		return forceBy(particle, wall);
