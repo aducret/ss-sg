@@ -12,14 +12,19 @@ import util.RandomUtils;
 
 public class SimulationInputGenerator {
 	private static final double PARTICLE_MASS = 80;
-	private static final double MAX_RADIUS = 0.29;
+	private static final double MAX_RADIUS = 0.35;
 	private static final double MIN_RADIUS = 0.25;
-	private static final double VD = 1.5;
 	private static final double TAO = 0.5;
 	private static final double A = 2000;
 	private static final double B = 0.08;
 	private static final double KN = 1.2e5;
 	private static final double KT = 2 * KN;
+	private static final double D = 1.2;
+	private static final double LW = 20.0;
+	
+	//estos son los unicos parametros que varian
+	private static final double VD = 1.5;
+	private static final int N = 100;
 
 	public static void generateRandomInput(int N, double L, double W, double D)
 			throws FileNotFoundException, UnsupportedEncodingException {
@@ -98,7 +103,7 @@ public class SimulationInputGenerator {
 	}
 
 	public static void main(String[] args) throws FileNotFoundException, UnsupportedEncodingException {
-		generateRandomInput(300, 20.0, 20.0, 1.2);
+		generateRandomInput(N, LW, LW, D);
 	}
 
 }
