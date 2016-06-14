@@ -26,7 +26,7 @@ public class SimulationInputGenerator {
 	private static final double VD = 1.5;
 	private static final int N = 100;
 
-	public static void generateRandomInput(int N, double L, double W, double D)
+	public static void generateRandomInput(int N, double L, double W, double D, double VD)
 			throws FileNotFoundException, UnsupportedEncodingException {
 
 		PrintWriter dynamicWriter = new PrintWriter("doc/examples/Dynamic" + N + "-" + L + "-" + W + "-" + D + ".txt",
@@ -102,12 +102,12 @@ public class SimulationInputGenerator {
 		staticWriter.println(staticEntry);
 	}
 	
-	public static void generateWithConstants() throws FileNotFoundException, UnsupportedEncodingException {
-		generateRandomInput(N, LW, LW, D);
+	public static void generateWithConstants(int N, double vd) throws FileNotFoundException, UnsupportedEncodingException {
+		generateRandomInput(N, LW, LW, D, vd);
 	}
 
 	public static void main(String[] args) throws FileNotFoundException, UnsupportedEncodingException {
-		generateRandomInput(N, LW, LW, D);
+		generateRandomInput(N, LW, LW, D, VD);
 	}
 
 }
