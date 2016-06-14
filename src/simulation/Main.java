@@ -13,10 +13,10 @@ import simulation.SocialForceSimulation.FlowListener;
 public class Main {
 	private static final String ENCODING = "UTF-8";
 
-	private static final int N = 100;
+	private static final int N = 20;
 	private static final double VD_START = 0.5;
-	private static final double VD_END = 4.0;
-	private static final double STEP = 0.25;
+	private static final double VD_END = 1.0;
+	private static final double STEP = 0.1;
 	private static final int M = 6;
 	private static final double L = 20.0;
 	private static final double W = 20.0;
@@ -30,11 +30,12 @@ public class Main {
 	private static String DYNAMIC_FILE_PATH = "doc/examples/Dynamic" + N + "-" + L + "-" + W + "-" + D + ".txt";
 	private static String STATIC_FILE_PATH = "doc/examples/Static" + N + "-" + L + "-" + W + "-" + D + ".txt";
 
-	private static final double TIME_DELTA = 0.001;
+	private static final double TIME_DELTA = 0.01;
 	private static final double TIME_FRAME = 0.1;
 
 	public static void main(String[] args) throws FileNotFoundException, UnsupportedEncodingException {
 		for (double vd = VD_START; vd <= VD_END; vd += STEP) {
+			System.out.println("starting with vd: " + vd);
 			for (int m = 1; m <= M; m++) {
 				SimulationInputGenerator.generateWithConstants(N, vd);
 				System.out.println("generated input: " + m + ", starting simulation...");

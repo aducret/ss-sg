@@ -80,7 +80,7 @@ public class SimulationInputGenerator {
 					if (positions.size() >= N) {
 						end = System.currentTimeMillis();
 						time = end - start;
-						System.out.println("found all N in: " + time + ", now: " + positions.size());
+						//System.out.println("found all N in: " + time + ", now: " + positions.size());
 						return positions;
 					}
 				}
@@ -88,7 +88,7 @@ public class SimulationInputGenerator {
 
 			end = System.currentTimeMillis();
 			time = end - start;
-			System.out.println("found in: " + time + ", now: " + positions.size());
+//			System.out.println("found in: " + time + ", now: " + positions.size());
 		}
 		return positions;
 	}
