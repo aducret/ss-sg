@@ -4,6 +4,7 @@ import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 
+import generator.SimulationInputGenerator;
 import model.SimulationData;
 import parser.InformationParser;
 import parser.OvitoFileInputGenerator;
@@ -12,15 +13,16 @@ import simulation.SocialForceSimulation.FlowListener;
 public class Main {
 	private static final String ENCODING = "UTF-8";
 
-	private static final int N = 100;
+	private static final int N = 30;
+	private static final int M = 4;
 	private static final double L = 20.0;
 	private static final double W = 20.0;
 	private static final double D = 1.2;
 
-//	 private static String DYNAMIC_FILE_PATH = "doc/examples/Dynamic" +
-//	 "Testing" + ".txt";
-//	 private static String STATIC_FILE_PATH = "doc/examples/Static" +
-//	 "Testing" + ".txt";
+	// private static String DYNAMIC_FILE_PATH = "doc/examples/Dynamic" +
+	// "Testing" + ".txt";
+	// private static String STATIC_FILE_PATH = "doc/examples/Static" +
+	// "Testing" + ".txt";
 
 	private static String DYNAMIC_FILE_PATH = "doc/examples/Dynamic" + N + "-" + L + "-" + W + "-" + D + ".txt";
 	private static String STATIC_FILE_PATH = "doc/examples/Static" + N + "-" + L + "-" + W + "-" + D + ".txt";
@@ -29,16 +31,25 @@ public class Main {
 	private static final double TIME_FRAME = 0.1;
 
 	public static void main(String[] args) throws FileNotFoundException, UnsupportedEncodingException {
+		for (int m = 1; m <= M; m++) {
+			SimulationInputGenerator.generateWithConstants();
+			System.out.println("generated input: " + m + ", starting simulation...");
+			runSimulation(m);
+		}
+	}
+
+	private static void runSimulation(int m) throws FileNotFoundException, UnsupportedEncodingException {
 		SimulationData simulationData = parseSimulationData();
 		if (simulationData == null) {
 			throw new IllegalArgumentException("couldn't read simulationData!");
 		}
 
-		final OvitoFileInputGenerator ovito = new OvitoFileInputGenerator("doc/examples/result.txt", W, D);
+		double vd = simulationData.getVd();
+		final OvitoFileInputGenerator ovito = new OvitoFileInputGenerator(
+				"doc/examples/result" + N + "-" + vd + "-" + m + ".txt", W, D);
 		ovito.generateFile();
 
-		PrintWriter flowWriter = new PrintWriter("doc/examples/flow.txt", ENCODING);
-		PrintWriter kineticWriter = new PrintWriter("doc/examples/kinetic.txt", ENCODING);
+		PrintWriter flowWriter = new PrintWriter("doc/examples/flow" + N + "-" + vd + "-" + m + ".txt", ENCODING);
 
 		SocialForceSimulation granularSimulation = new SocialForceSimulation(TIME_DELTA, TIME_FRAME);
 		granularSimulation.setFlowListener(new FlowListener() {
@@ -52,13 +63,11 @@ public class Main {
 
 			@Override
 			public void onFrameAvailable(double time, SimulationData frame) {
-				kineticWriter.println(time + "," + frame.getKineticEnergy());
 				ovito.printSimulationFrame(frame);
 			}
 		});
 		ovito.endSimulation();
 		flowWriter.close();
-		kineticWriter.close();
 	}
 
 	private static SimulationData parseSimulationData() {

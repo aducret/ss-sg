@@ -1,10 +1,16 @@
-function plot_egress_time(filePath) 
-	data = load(filePath);
-	data = [(1:1:rows(data))' data];
+function plot_egress_time(N, vd, M) 
+
+	for m=1:M
+		filePath = strcat("doc/examples/flow", N, "-", vd, "-", m, ".txt");
+		times(m, :) = load(filePath)';
+	end
 	
 	plot(data(:, 1), data(:, 2), '.k','markersize', 15);
 
-	axis([0 101 0 40])
+	timeMax = ceil(max(data(:, 2)));
+	peopleAmount = rows(data);
+
+	axis([0 peopleAmount 0 timeMax])
 	title('Tiempo de egreso', 'fontsize', 20);
 	xlabel('Peaton egresados [peatones]', 'fontsize', 20);
 	ylabel('Tiempo [s]', 'fontsize', 20);
