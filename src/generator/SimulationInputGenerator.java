@@ -24,7 +24,7 @@ public class SimulationInputGenerator {
 	
 	//estos son los unicos parametros que varian
 	private static final double VD = 1.5;
-	private static final int N = 30;
+	private static final int N = 100;
 
 	public static void generateRandomInput(int N, double L, double W, double D)
 			throws FileNotFoundException, UnsupportedEncodingException {
