@@ -18,10 +18,10 @@ function plot_egress_time(N, vd, M)
 	data3 = meanTimes + stdTimes;
 	plotDomain = 1:rows(meanTimes);
 
-	plot(plotDomain, data1, '-r','markersize', 15,'linewidth', 2);
+	plot(plotDomain, data1, '-b','markersize', 15,'linewidth', 2);
 	hold on;
 	plot(plotDomain, data2, '-k','markersize', 15,'linewidth', 2);
-	plot(plotDomain, data3, '-b','markersize', 15,'linewidth', 2);
+	plot(plotDomain, data3, '-r','markersize', 15,'linewidth', 2);
 
 	timeMax = ceil(max(data3));
 	peopleAmount = rows(meanTimes);
